@@ -20,25 +20,25 @@ namespace StudentApi.Controllers
             try
             {
                 if (file == null || file.Length == 0)
-                    return BadRequest("No file uploaded.");
+                    return BadRequest(new { message = "No file uploaded." });
 
                 // check file type
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
                 var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
                 if (!allowedExtensions.Contains(extension))
-                    return BadRequest("Invalid file type. Only image files are allowed.");
+                    return BadRequest(new { message = "Invalid file type. Only image files are allowed." });
 
                 // check file size (max 1MB)
                 const long maxFileSize = 1 * 1024 * 1024; // 1MB
                 if (file.Length > maxFileSize)
-                    return BadRequest("File size exceeds the maximum limit of 1MB.");
+                    return BadRequest(new { message = "File size exceeds the maximum limit of 1MB." });
 
                 var imageUrl = await _uploadService.UploadImageAsync(file);
-                return Ok(imageUrl);
+                return Ok(new { data = imageUrl });
             }
             catch(Exception ex)
             {
-                return BadRequest("An error occure while uploading profile image!");
+                return BadRequest(new { message = "An error occure while uploading profile image!" });
             }
             
         }

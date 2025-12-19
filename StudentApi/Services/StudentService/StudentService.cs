@@ -23,6 +23,7 @@ namespace StudentApi.Services.StudentService
                 var students = await _context.Students
                 .AsNoTracking()
                 .Where(s => s.IsDelete == false)
+                .OrderBy(s => s.RollNumber)
                 .ToListAsync();
 
                 return students.Select(ToDto).ToList();
@@ -30,7 +31,6 @@ namespace StudentApi.Services.StudentService
             catch(Exception ex)
             {
                 // log exception for further analysis
-
                 return null;
             }
 
@@ -126,7 +126,7 @@ namespace StudentApi.Services.StudentService
                 existing.Gender = dto.Gender;
                 existing.Email = dto.Email;
                 existing.ProfilePhoto = dto.ProfilePhoto;
-                existing.UpdatedAt = DateTime.Now.ToString("yyyy-MM-dd HH:mm:s");
+                existing.UpdatedAt = DateTime.Now.ToString("yyyy-MM-dd");
 
                 await _context.SaveChangesAsync();
                 return string.Empty;

@@ -22,12 +22,12 @@ namespace StudentApi.Controllers
             {
                 var students = await _studentService.GetAllAsync();
                 if (students == null)
-                    return BadRequest("An error occure while fetching students data!"); // error while fetching students data
+                    return BadRequest(new { message = "An error occure while fetching students data!" }); // error while fetching students data
                 return Ok(students);
             }
             catch(Exception ex)
             {
-                return BadRequest("An errror occure while fetching students data!");
+                return BadRequest(new { message = "An errror occure while fetching students data!" });
             }
         }
 
@@ -39,16 +39,16 @@ namespace StudentApi.Controllers
             {
                 // check if provided id id not 0 or negative
                 if (id <= 0)
-                    return BadRequest("Invalid student ID.");
+                    return BadRequest(new { message = "Invalid student ID." });
 
                 var student = await _studentService.GetByIdAsync(id);
                 if (student == null)
-                    return NotFound("Student not found!");
+                    return NotFound(new { message = "Student not found!" });
                 return Ok(student);
             }
             catch(Exception ex)
             {
-                return BadRequest("An error occure while fetching student data!");
+                return BadRequest(new { message = "An error occure while fetching student data!" });
             }
         }
 
@@ -60,24 +60,24 @@ namespace StudentApi.Controllers
             {
                 // check reqiured fields
                 if (dto == null)
-                    return BadRequest("Student data is required.");
+                    return BadRequest(new { message = "Student data is required." });
                 if (string.IsNullOrWhiteSpace(dto.FirstName) || string.IsNullOrWhiteSpace(dto.LastName))
-                    return BadRequest("First name and Last name are required.");
+                    return BadRequest(new { message = "First name and Last name are required." });
                 if (dto.RollNumber <= 0)
-                    return BadRequest("Please add valid Roll number");
+                    return BadRequest(new { message = "Please add valid Roll number" });
                 if (string.IsNullOrWhiteSpace(dto.Email))
-                    return BadRequest("Email is required.");
+                    return BadRequest(new { message = "Email is required." });
 
                 string result = await _studentService.CreateAsync(dto);
                 if(!string.IsNullOrEmpty(result)) 
-                    return BadRequest(result);
+                    return BadRequest(new { message = result });
 
-                return Ok("Student created successfully!");
+                return Ok(new { message = "Student created successfully!" });
             }
             catch(Exception ex)
             {
                 // log error
-                return BadRequest("An error occure while saving student data!");
+                return BadRequest(new { message = "An error occure while saving student data!" });
             }
         }
 
@@ -89,25 +89,25 @@ namespace StudentApi.Controllers
             {
                 // check reqiured fields
                 if (id <= 0)
-                    return BadRequest("Invalid student ID.");
+                    return BadRequest(new { message = "Invalid student ID." });
                 if (dto == null)
-                    return BadRequest("Student data is required.");
+                    return BadRequest(new { message = "Student data is required." });
                 if (string.IsNullOrWhiteSpace(dto.FirstName) || string.IsNullOrWhiteSpace(dto.LastName))
-                    return BadRequest("First name and Last name are required.");
+                    return BadRequest(new { message = "First name and Last name are required." });
                 if (dto.RollNumber <= 0)
-                    return BadRequest("Please add valid Roll number");
+                    return BadRequest(new { message = "Please add valid Roll number" });
                 if (string.IsNullOrWhiteSpace(dto.Email))
-                    return BadRequest("Email is required.");
+                    return BadRequest(new { message = "Email is required." });
 
                 string result = await _studentService.UpdateAsync(id, dto);
                 if (!string.IsNullOrEmpty(result))
-                    return BadRequest(result);
+                    return BadRequest(new { message = result });
 
-                return Ok("Student data updated successfully!");
+                return Ok(new { message = "Student data updated successfully!" });
             }
             catch(Exception ex)
             {
-                return BadRequest("An error occure while updating student data!");
+                return BadRequest(new { message = "An error occure while updating student data!" });
             }
         }
 
@@ -118,17 +118,18 @@ namespace StudentApi.Controllers
             try
             {
                 if (id <= 0)
-                    return BadRequest("Invalid student ID.");
+                    return BadRequest(new { message = "Invalid student ID." });
 
                 var deleted = await _studentService.DeleteAsync(id);
                 if (!deleted)
-                    return NotFound("Student not found!");
+                    return NotFound(new { message = "Student not found!" });
 
-                return Ok("Student deleted successfully!");
+                return Ok(new { message = "Student deleted successfully!" });
+
             }
             catch(Exception ex)
             {
-                return BadRequest("An error occure while deleting a record!");
+                return BadRequest(new { message = "An error occure while deleting a record!" });
             }
         }
     }
